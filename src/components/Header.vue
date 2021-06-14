@@ -1,13 +1,15 @@
 <template>
   <header>
-      <img src="../assets/img/notflix-logo.png" alt="Not!flix Logo">
-      <nav>
-          <input               
+        <img src="../assets/img/notflix-logo.png" alt="Not!flix Logo">
+        <nav>
+            <input               
                 type="text" 
                 placeholder="Movies, series, titles..."
                 v-model="searchInput"
                 @keyup="$emit('sendSearch', searchInput)">
-          <button>Search</button>
+                <!-- search on enter or button -->
+                <!-- @keydown.enter="$emit('sendSearch', searchInput)" -->
+            <!-- <button @click="$emit('sendSearch', searchInput)">Search</button> -->
       </nav>
   </header>
 </template>
@@ -33,7 +35,7 @@ export default {
         padding: 10px 0;
 
         img {
-            height: 50%;
+            height: 60%;
         }
 
         nav {
@@ -46,8 +48,9 @@ export default {
                 padding: 5px;
                 margin-left: 10px;
                 font-size: 18px;
+                border-radius: 10px;
                 color: $text-color;
-                background-color: $bg-color;
+                background-color: transparent;
             }
         }
     }

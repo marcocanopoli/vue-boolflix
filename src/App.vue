@@ -17,6 +17,7 @@ export default {
   name: 'App',
   data() {
     return {
+      myApiKey: 'cac0ead6a46196b7a9b38d946de02afc',
       searchArray: []
     }
   },
@@ -26,19 +27,31 @@ export default {
   },
   methods: {
     performSearch(text) {
-      if (text.trim() != '') {
-        axios
-        .get('https://api.themoviedb.org/3/search/movie', {
-          params: {
-            api_key: 'cac0ead6a46196b7a9b38d946de02afc',
-            query: text
-          }      
-        })
-        .then(res => {
-          this.searchArray = res.data.results;
-        });
-      } else if (text.trim() == '') {
-        this.searchArray = [];
+      if (text.trim() == '') {
+        this.searchArray = [];        
+      } else if (text.trim() != '') {
+
+        axios.all([
+
+          //movies
+          axios.get('https://api.themoviedb.org/3/search/movie', {
+            params: {
+              api_key: this.myApiKey,
+              query: text
+            }      
+          }),
+
+          //series
+          axios.get('https://api.themoviedb.org/3/search/tv', {
+            params: {
+              api_key: this.myApiKey,
+              query: text
+            }      
+          })
+        ])
+        .then(axios.spread((...movieRes) => {
+          this.searchArray = movieRes[0].data.results.concat(movieRes[1].data.results);
+        }));
       }
     } 
   }
@@ -47,7 +60,8 @@ export default {
 
 <style lang="scss">
   @import './assets/style/global.scss';
-  // #app {
-    
-  // }
+
+  #app {
+    height: 100%;
+  }
 </style>

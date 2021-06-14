@@ -25,3 +25,7 @@ body {
     padding: 0 50px;
     background-color: $bg-color;
 }
+
+.brand-color-l-plus15 {
+    color: scale-color($brand-color, $lightness: +15%);
+}
