@@ -71,22 +71,29 @@ export default {
     @import '../assets/style/mixins.scss';
 
     .card {
-        position: relative;        
+        position: relative;     
         height: 507px;
         min-height: 507px;
         width: 342px;
         min-width: 342px;
-        margin: 5px;;
+        margin: 9px;
         border-radius: 15px;
-        box-shadow: 0 0 10px scale-color($bg-color, $lightness: +20%);
+        border: 3px solid $bg-color;
+        box-shadow: 0 0 10px rgba($bg-color, 0.5);
         overflow: hidden;
         background: $bg-color url('../assets/img/logo-512.png') no-repeat center center;
         background-size: 50%;
 
         &:hover {
             cursor: pointer;
+            border: 5px solid $brand-color;
+            transition-delay: .3s;
+            transition-duration: .5s;
+            transform: scale(1.2);
+            z-index: 1;
 
             .card-info {
+                transition-delay: .5s;
                 opacity: 1;
             }
         }
@@ -108,8 +115,8 @@ export default {
             text-align: center;
             background-image: linear-gradient(
                 transparent, 
-                scale-color($bg-color, $alpha: -50%) 20%, 
-                scale-color($bg-color, $alpha: -25%) 40%, 
+                scale-color($bg-color, $alpha: -50%) 15%, 
+                scale-color($bg-color, $alpha: -15%) 40%, 
                 scale-color($bg-color, $alpha: -2%) 70%);
             opacity: 0;
             transition: .3s;

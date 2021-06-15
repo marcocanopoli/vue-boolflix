@@ -6,10 +6,10 @@
                 type="text" 
                 placeholder="Movies, series, titles..."
                 v-model="searchInput"
-                @keyup="$emit('sendSearch', searchInput)">
-                <!-- search on enter or button -->
-                <!-- @keydown.enter="$emit('sendSearch', searchInput)" -->
-            <!-- <button @click="$emit('sendSearch', searchInput)">Search</button> -->
+                @keydown.enter="$emit('sendSearch', searchInput)">
+                <!-- real-time search -->
+                <!-- @keyup="$emit('sendSearch', searchInput)" -->
+            <button @click="$emit('sendSearch', searchInput)">Search</button>
       </nav>
   </header>
 </template>
@@ -31,11 +31,12 @@ export default {
 
     header {
         @include flex-center ('cross');        
-        height: 65px;
-        padding: 10px 0;
+        height: $header-height;
+        padding: 0 60px; 
+        background-image: linear-gradient($bg-color, (rgba($bg-color, 0.7)));
 
         img {
-            height: 60%;
+            height: 50%;
         }
 
         nav {
@@ -45,12 +46,19 @@ export default {
             
             input,
             button {
-                padding: 5px;
+                padding: 10px;
                 margin-left: 10px;
                 font-size: 18px;
                 border-radius: 10px;
                 color: $text-color;
                 background-color: transparent;
+                outline: none;
+                border: 2px solid $brand-color;
+            }
+
+            button:hover {
+                cursor: pointer;
+                color: $brand-color;
             }
         }
     }

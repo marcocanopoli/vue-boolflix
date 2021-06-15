@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header @sendSearch="performSearch"/>
-    <Main :search-array="searchArray"/>
+    <Main :searched="searched"/>
   </div>
 </template>
 
@@ -18,7 +18,9 @@ export default {
   data() {
     return {
       myApiKey: 'cac0ead6a46196b7a9b38d946de02afc',
-      searchArray: []
+      apiMovieUrl: 'https://api.themoviedb.org/3/search/movie',
+      apiTvUrl: 'https://api.themoviedb.org/3/search/tv',
+      searched: []
     }
   },
   components: {
@@ -28,13 +30,13 @@ export default {
   methods: {
     performSearch(text) {
       if (text.trim() == '') {
-        this.searchArray = [];        
+        this.searched = [];        
       } else if (text.trim() != '') {
 
         axios.all([
 
           //movies
-          axios.get('https://api.themoviedb.org/3/search/movie', {
+          axios.get(this.apiMovieUrl, {
             params: {
               api_key: this.myApiKey,
               query: text
@@ -42,15 +44,17 @@ export default {
           }),
 
           //series
-          axios.get('https://api.themoviedb.org/3/search/tv', {
+          axios.get(this.apiTvUrl, {
             params: {
               api_key: this.myApiKey,
               query: text
             }      
           })
         ])
-        .then(axios.spread((...movieRes) => {
-          this.searchArray = movieRes[0].data.results.concat(movieRes[1].data.results);
+        .then(axios.spread((...res) => {
+          const movieRes = res[0].data.results;
+          const tvRes = res[1].data.results;
+          this.searched = movieRes.concat(tvRes);
         }));
       }
     } 
@@ -62,6 +66,8 @@ export default {
   @import './assets/style/global.scss';
 
   #app {
-    height: 100%;
+    min-height: 100vh;
+    background-image: url('./assets/img/bg2.jpg');
+    background-repeat: repeat-y;
   }
 </style>

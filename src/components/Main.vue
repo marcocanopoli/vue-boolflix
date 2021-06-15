@@ -1,20 +1,16 @@
 <template>
     <main>
-        <div v-if="searchArray.length > 0" class="cards">
-            <ul>
-                <Card   
-                    v-for="item in searchArray" 
-                    :key="item.id"
-                    :cover="getPoster(item)"
-                    :title="getTitle(item)"
-                    :original-title="getOriginalTitle(item)"
-                    :lang="item.original_language"
-                    :stars="ratingStars(item.vote_average)"
-                    :overview="item.overview"/>
-            </ul>
-
-        </div>
-        <h1 v-else>No results for current search</h1>
+        <ul>
+            <Card   
+                v-for="item in searched" 
+                :key="item.id"
+                :cover="getPoster(item)"
+                :title="getTitle(item)"
+                :original-title="getOriginalTitle(item)"
+                :lang="item.original_language"
+                :stars="ratingStars(item.vote_average)"
+                :overview="item.overview"/>                
+        </ul>               
     </main>
 </template>
 
@@ -23,16 +19,11 @@ import Card from './Card.vue';
 
 export default {
     name: 'Main',
-    // data() {
-    //     return {
-
-    //     }
-    // },
     components: {
         Card
     },
     props: {
-        searchArray: Array
+        searched: Array
     },
     methods: {
         getTitle(obj) {
@@ -62,23 +53,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    @import '../assets/style/variables.scss';
     @import '../assets/style/mixins.scss';
     
     main {
-        height: 100%;
+        min-height: calc(100vh - #{$header-height});                        
+        background-image: linear-gradient((rgba($bg-color, 0.7)), transparent);
 
-        h1 {
-            @include absolute-center;
-        }
-
-        .cards {
-            margin: 0 auto;
-        }
-
-        ul {            
+        ul {                       
             display: flex;
             flex-wrap: wrap;
+            padding: 40px 50px;
             list-style: none;
+            // background-color: rgba($bg-color, 0.7);
         }
     }
 </style>
