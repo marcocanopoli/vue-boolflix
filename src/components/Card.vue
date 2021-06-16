@@ -1,52 +1,136 @@
 <template>
     <li class="card">
-        <img class="poster" :src="cover" alt="">
-        <div class="card-info">
-            <h2>{{ title }}</h2>
-            <h3>Original title: 
-                <span class="brand-color-l-plus15">{{ originalTitle }}</span>
+        <img class="poster" :src="getPoster(item)" alt="">
+        <div class="card-info">            
+            <h2 class="title">{{ getTitle(item) }}</h2>
+            <h3 class="original">Original title: 
+                <span>{{ getOriginalTitle(item) }}</span>
             </h3>
-            <h4>Language: 
+            <h4 class="lang">Language: 
                 <img 
                     class="flag" 
-                    :src="getFlag(lang)" 
-                    :alt="lang">
+                    :src="getFlag(item.original_language)" 
+                    :alt="item.original_language">
             </h4>
             <div class="stars">
-                <span>
-                    <i  v-for="index in stars" 
-                        :key="index" 
-                        class="fas fa-star"></i>
-                </span>
-                <span>
-                    <i  v-for="index in (5 - stars)" 
-                        :key="index" 
-                        class="far fa-star"></i>
+                <i  v-for="i in 5" 
+                    :key="i" 
+                    :class="i <= getStars(item.vote_average) ? 'fas' : 'far'"
+                    class="fa-star"></i>
+            </div>
+            <div class="genres" v-if="genresStrings.length > 0">
+                <span   class="genre" 
+                        v-for="genre, index in genresStrings" 
+                        :key="index">
+                        {{ genre }}
                 </span>
             </div>
-            <p>{{ overview }}</p>
+            <div class="cast" v-if="cast.length > 0">
+                <span   v-for="actor in cast" 
+                        :key="actor.id">
+                        {{ actor.name }} : <span>{{actor.character}}</span>
+                </span>
+            </div>
+            <p class="overview">{{ item.overview }}</p>
         </div>        
     </li>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: 'Card',
     data() {
         return {
             itFlagPath: require('../assets/img/flags/it.png'),
-            enFlagPath: require('../assets/img/flags/en.png')
+            enFlagPath: require('../assets/img/flags/en.png'),
+            creditsUrl: `https://api.themoviedb.org/3/${this.media}/${this.item.id}/credits`,
+            genresListUrl: `https://api.themoviedb.org/3/genre/${this.media}/list`,
+            cast: [],
+            genres: [],
+            genresStrings: [],
         }
     },
     props: {
-        cover: String,
-        title: String,
-        originalTitle: String,
-        lang: String,
-        stars: Number,
-        overview: String,
+        media: String,
+        item: Object,
+        apiKey: String
     },
     methods: {
+        //get item's first 5 cast names
+        getCast() { 
+            axios
+                .get(this.creditsUrl, {
+                    params: {
+                        api_key: this.apiKey                        
+                    }
+                })
+                .then(res => {
+                    this.cast = (res.data.cast);
+                    this.cast.splice(5);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        //get all genres for item's media (movie or tv)
+        getGenres() {           
+            axios
+                .get(this.genresListUrl, {
+                    params: {
+                        api_key: this.apiKey                        
+                    }
+                })
+                .then(res => {
+                    this.genres = (res.data.genres);
+                    this.getGenresStrings();
+                    console.log(this.genresStrings);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        //get current item's genres
+        getGenresStrings() {
+            this.item.genre_ids.forEach(genreId => {
+                this.genres.forEach(genre => {
+                    if (genre.id == genreId) {
+                        this.genresStrings.push(genre.name);
+                    }
+                });                
+            });
+            return this.genresStrings;
+        },
+
+        //get current item's poster
+        getPoster(obj) {
+            if (obj.poster_path != null) {
+                return 'https://image.tmdb.org/t/p/w342' + obj.poster_path;
+            }
+        },
+
+        //get current item's title
+        getTitle(obj) {
+            if (obj.title) {
+                return obj.title;
+            } else {
+                return obj.name;
+            } 
+        },
+
+        //get current item's original title
+        getOriginalTitle(obj) {
+            if (obj.original_title) {
+                return obj.original_title;
+            } else {
+                return obj.original_name;
+            } 
+        },
+
+        //get current item's language flag
         getFlag (countryISOCode) {
             let path = '';
             switch(countryISOCode) {
@@ -58,10 +142,19 @@ export default {
                     path = this.enFlagPath;
                     break;
                 default:
-                    console.log("Unknown flag code for", countryISOCode);
+                    // console.log("Unknown flag code for", countryISOCode);
             }
             return path;
-        }
+        },
+
+        //get current item's 1-to-5 stars rating
+        getStars(rating) {
+            return Math.ceil(parseInt(rating) / 2);
+        },
+    },
+    created() {
+        this.getCast();
+        this.getGenres();
     }
 }
 </script>
@@ -121,38 +214,67 @@ export default {
             opacity: 0;
             transition: .3s;
 
-            h2, h3, h4, p {
+            & > * {
+                position: relative;                
+                text-shadow: 0 0 5px $bg-color;
                 padding-bottom: 5px;
-                text-shadow: 0 0 5px $bg-color;                
             }
 
-            h2 {
-                padding-bottom: 10px;
+            .title,
+            .original > span,
+            .stars > .fas ,
+            .cast > span > span{
                 color: $brand-color-l-plus15;
-            }
+            }            
             
             .flag {
                 width: 20px;
                 margin-left: 5px;
                 vertical-align: text-bottom;
-            }  
+            } 
             
             .stars {
-                margin-top: 5px;
                 i {
-                margin-right: 5px;
+                    margin-right: 5px;
+                }
+            }   
 
-                    &.fas {
-                        color: $brand-color-l-plus15;
-                    }
+            .genres {
+                padding-bottom: 10px;
+                .genre:not(:last-child)::after {
+                    content: ',';
                 }
             }
 
-            p {
+            .cast {
+                display: flex;
+                flex-direction: column;
+                padding: 10px 0;
+                
+                span {
+                    overflow-x: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }                
+            } 
+
+            .genres,
+            .cast {
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);                   
+                    width: 35%;                    
+                    border-bottom: 1px solid $brand-color-l-plus15;
+                }        
+            }
+
+            .overview {
                 margin-top: 10px;
-                padding-top: 10px;
+                font-size: 14px;
                 overflow-y: auto;
-                border-top: 1px solid $brand-color-l-plus15;
             }
         }               
     }

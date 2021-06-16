@@ -1,16 +1,27 @@
 <template>
     <main>
-        <ul>
-            <Card   
-                v-for="item in searched" 
-                :key="item.id"
-                :cover="getPoster(item)"
-                :title="getTitle(item)"
-                :original-title="getOriginalTitle(item)"
-                :lang="item.original_language"
-                :stars="ratingStars(item.vote_average)"
-                :overview="item.overview"/>                
-        </ul>               
+        <div v-if="movies.length > 0">
+            <h2>Movies</h2>
+            <ul>
+                <Card   
+                    v-for="item in movies" 
+                    :key="item.id"
+                    :item="item"
+                    :media="'movie'"
+                    :api-key="myApiKey"/>
+            </ul>
+        </div>
+        <div v-if="series.length > 0">
+            <h2>TV</h2>
+            <ul>
+                <Card   
+                    v-for="item in series" 
+                    :key="item.id"
+                    :item="item"
+                    :media="'tv'"
+                    :api-key="myApiKey"/>
+            </ul>
+        </div>
     </main>
 </template>
 
@@ -23,31 +34,19 @@ export default {
         Card
     },
     props: {
-        searched: Array
-    },
-    methods: {
-        getTitle(obj) {
-            if ('title'in obj) {
-                return obj.title;
-            } else {
-                return obj.name;
-            } 
-        },
-        getOriginalTitle(obj) {
-            if ('original_title'in obj) {
-                return obj.original_title;
-            } else {
-                return obj.original_name;
-            } 
-        },
-        getPoster(obj) {
-            if (obj.poster_path != null) {
-                return 'https://image.tmdb.org/t/p/w342' + obj.poster_path;
-            }
-        },
-        ratingStars(rating) {
-            return Math.ceil(parseInt(rating) / 2);
-        }
+        movieSeries: Array,
+        movies: Array,
+        series: Array,
+        myApiKey: String
+    // },
+    // methods: {
+    //     getCat(obj) {
+    //         if (obj.title) {
+    //             return 'movie';
+    //         } else if (obj.name) {
+    //             return 'tv';
+    //         }            
+    //     }
     }
 }
 </script>
@@ -58,7 +57,7 @@ export default {
     
     main {
         min-height: calc(100vh - #{$header-height});                        
-        background-image: linear-gradient((rgba($bg-color, 0.7)), transparent);
+        background-image: linear-gradient((rgba($bg-color, 0.7)), transparent);        
 
         ul {                       
             display: flex;
@@ -66,6 +65,14 @@ export default {
             padding: 40px 50px;
             list-style: none;
             // background-color: rgba($bg-color, 0.7);
+        }
+
+        h2 {
+            width: 342px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 48px;
+            background: linear-gradient(90deg, transparent 0%, $brand-color 50%, transparent 100%);
         }
     }
 </style>

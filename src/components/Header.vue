@@ -6,10 +6,10 @@
                 type="text" 
                 placeholder="Movies, series, titles..."
                 v-model="searchInput"
-                @keydown.enter="$emit('sendSearch', searchInput)">
+                @keydown.enter="sendSearch()">
                 <!-- real-time search -->
-                <!-- @keyup="$emit('sendSearch', searchInput)" -->
-            <button @click="$emit('sendSearch', searchInput)">Search</button>
+                <!-- @keyup="sendSearch()" -->
+            <button @click="sendSearch()">Search</button>
       </nav>
   </header>
 </template>
@@ -20,6 +20,12 @@ export default {
     data() {
         return {
             searchInput: ''
+        }
+    },
+    methods: {
+        sendSearch() {
+            this.$emit('search', this.searchInput);
+            this.searchInput = '';
         }
     }
 }
@@ -54,6 +60,13 @@ export default {
                 background-color: transparent;
                 outline: none;
                 border: 2px solid $brand-color;
+            }
+
+            input {  
+                transition: .3s;
+                &:focus {
+                    background-color: rgba($brand-color, 0.2);
+                }              
             }
 
             button:hover {

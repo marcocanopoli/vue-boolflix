@@ -1,7 +1,10 @@
 <template>
   <div id="app">
-    <Header @sendSearch="performSearch"/>
-    <Main :searched="searched"/>
+    <Header @search="performSearch"/>
+    <Main :movie-series="movieSeries"
+          :movies="movies"
+          :series="series"
+          :my-api-key="myApiKey"/>
   </div>
 </template>
 
@@ -18,9 +21,14 @@ export default {
   data() {
     return {
       myApiKey: 'cac0ead6a46196b7a9b38d946de02afc',
-      apiMovieUrl: 'https://api.themoviedb.org/3/search/movie',
-      apiTvUrl: 'https://api.themoviedb.org/3/search/tv',
-      searched: []
+      apiUrl: 'https://api.themoviedb.org/3/search/',
+      movieGenresUrl: `https://api.themoviedb.org/3/genre/movie/list`,
+      tvGenresUrl: `https://api.themoviedb.org/3/genre/tv/list`,
+      movies: [],
+      series: [],
+      movieSeries: [],
+      movieGenres: [],
+      tvGenres: []
     }
   },
   components: {
@@ -30,13 +38,15 @@ export default {
   methods: {
     performSearch(text) {
       if (text.trim() == '') {
-        this.searched = [];        
+        this.movieSeries = [];        
+        this.movies = [];        
+        this.series = [];        
       } else if (text.trim() != '') {
 
         axios.all([
 
           //movies
-          axios.get(this.apiMovieUrl, {
+          axios.get(this.apiUrl + 'movie', {
             params: {
               api_key: this.myApiKey,
               query: text
@@ -44,7 +54,7 @@ export default {
           }),
 
           //series
-          axios.get(this.apiTvUrl, {
+          axios.get(this.apiUrl + 'tv', {
             params: {
               api_key: this.myApiKey,
               query: text
@@ -54,9 +64,39 @@ export default {
         .then(axios.spread((...res) => {
           const movieRes = res[0].data.results;
           const tvRes = res[1].data.results;
-          this.searched = movieRes.concat(tvRes);
+          this.movies = movieRes;
+          this.series = tvRes;
+          this.movieSeries = movieRes.concat(tvRes);
         }));
       }
+    },
+    getMovieGenres(movieGenresUrl) {           
+      axios
+        .get(movieGenresUrl, {
+            params: {
+                api_key: this.apiKey                        
+            }
+        })
+        .then(res => {
+            this.movieGenres = (res.data.genres);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }, 
+    getTvGenres(tvGenresUrl) {           
+      axios
+        .get(tvGenresUrl, {
+            params: {
+                api_key: this.apiKey                        
+            }
+        })
+        .then(res => {
+            this.tvGenres = (res.data.genres);
+        })
+        .catch(error => {
+            console.log(error);
+        });
     } 
   }
 }
