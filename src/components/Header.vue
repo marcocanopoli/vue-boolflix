@@ -60,18 +60,16 @@ export default {
                 background-color: transparent;
                 outline: none;
                 border: 2px solid $brand-color;
+                transition: .3s;
             }
 
-            input {  
-                transition: .3s;
-                &:focus {
-                    background-color: rgba($brand-color, 0.2);
-                }              
+            input:focus {
+                background-color: rgba($brand-color, 0.2);              
             }
 
             button:hover {
                 cursor: pointer;
-                color: $brand-color;
+                background-color: $brand-color;
             }
         }
     }

@@ -7,10 +7,11 @@
                 <span>{{ getOriginalTitle(item) }}</span>
             </h3>
             <h4 class="lang">Language: 
-                <img 
+                <img v-if="flags.includes(item.original_language)"
                     class="flag" 
-                    :src="getFlag(item.original_language)" 
-                    :alt="item.original_language">
+                    :src="require(`../assets/img/flags/${item.original_language}.png`)" 
+                    :alt="item.original_language + 'flag'">
+                <span v-else>{{ item.original_language }}</span>
             </h4>
             <div class="stars">
                 <i  v-for="i in 5" 
@@ -43,10 +44,9 @@ export default {
     name: 'Card',
     data() {
         return {
-            itFlagPath: require('../assets/img/flags/it.png'),
-            enFlagPath: require('../assets/img/flags/en.png'),
             creditsUrl: `https://api.themoviedb.org/3/${this.media}/${this.item.id}/credits`,
             genresListUrl: `https://api.themoviedb.org/3/genre/${this.media}/list`,
+            flags: ['it', 'en', 'es', 'ja', 'fr', 'pt', 'de'],
             cast: [],
             genres: [],
             genresStrings: [],
