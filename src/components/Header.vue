@@ -43,6 +43,7 @@ export default {
 
         img {
             height: 50%;
+            filter: drop-shadow(0 0 10px $bg-color);
         }
 
         nav {
@@ -58,8 +59,9 @@ export default {
                 border-radius: 10px;
                 color: $text-color;
                 background-color: transparent;
-                outline: none;
                 border: 2px solid $brand-color;
+                box-shadow: (0 0 10px $bg-color);
+                outline: none;
                 transition: .3s;
             }
 

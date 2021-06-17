@@ -173,26 +173,27 @@ export default {
             }
 
             h1, img {
-                filter: drop-shadow(0 0 10px rgba($bg-color, 1));
+                filter: drop-shadow(0 0 10px $bg-color);
             }
         }
 
+        h2, h3, h4 {
+            text-align: center;
+            text-shadow: (0 0 10px $bg-color);
+        }
 
         h2 {
             width: 342px;
             margin: 0 auto;
-            text-align: center;
             font-size: 48px;
             background: linear-gradient(90deg, transparent 0%, $brand-color 50%, transparent 100%);
         }
 
         h3 {
-            text-align: center;
             font-size: 32px;
         }
 
         h4 {
-            text-align: center;
             font-size: 24px;
             padding-top: 20px;
         }

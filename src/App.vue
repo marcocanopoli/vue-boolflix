@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <Header @search="performSearch"/>
-    <Main :movie-series="movieSeries"
+    <Loader v-if="loading"/>
+    <Main  v-else
+          :movie-series="movieSeries"
           :movies="movies"
           :series="series"
           :movie-genres="movieGenres"
@@ -14,6 +16,7 @@
 <script>
 import Header from './components/Header.vue';
 import Main from './components/Main.vue';
+import Loader from './components/Loader.vue';
 import axios from 'axios';
 
 //font
@@ -30,21 +33,24 @@ export default {
       movieSeries: [],
       movieGenres: [],
       tvGenres: [],
-      currentSearch: ''
+      currentSearch: '',
+      loading: false
     }
   },
   components: {
     Header,
-    Main
+    Main,
+    Loader
   },
   methods: {
     performSearch(text) {
-
+      this.loading = true;
       this.currentSearch = text;
       if (text.trim() == '') {
         this.movieSeries = [];        
         this.movies = [];        
-        this.series = [];                
+        this.series = [];
+        this.loading = false;               
       } else if (text.trim() != '') {
 
         axios.all([
@@ -71,6 +77,7 @@ export default {
           this.movies = movieRes;
           this.series = tvRes;
           this.movieSeries = movieRes.concat(tvRes);
+          this.loading = false;        
         }));
       }
     },
