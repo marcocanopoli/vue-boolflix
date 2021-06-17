@@ -6,7 +6,8 @@
           :series="series"
           :movie-genres="movieGenres"
           :tv-genres="tvGenres"
-          :my-api-key="myApiKey"/>
+          :my-api-key="myApiKey"
+          :current-search="currentSearch"/>
   </div>
 </template>
 
@@ -28,7 +29,8 @@ export default {
       series: [],
       movieSeries: [],
       movieGenres: [],
-      tvGenres: []
+      tvGenres: [],
+      currentSearch: ''
     }
   },
   components: {
@@ -37,10 +39,12 @@ export default {
   },
   methods: {
     performSearch(text) {
+
+      this.currentSearch = text;
       if (text.trim() == '') {
         this.movieSeries = [];        
         this.movies = [];        
-        this.series = [];        
+        this.series = [];                
       } else if (text.trim() != '') {
 
         axios.all([

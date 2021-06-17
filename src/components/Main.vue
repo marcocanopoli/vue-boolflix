@@ -1,9 +1,15 @@
 <template>
     <main>
-        <div v-if="movies.length > 0">
+        <div v-if="currentSearch == ''" class="welcome">
+            <h1>Welcome to</h1>
+            <img src="../assets/img/notflix-logo.png" alt="">
+        </div>
+
+        <!-- Movies section -->
+        <section v-if="currentSearch != ''">
             <h2>Movies</h2>
-            <!-- <h4>Results for "{{ movieFilter }}"</h4>            -->
-            <div class="select-box">
+            <h4>Results for "{{ currentSearch }}"</h4>            
+            <div class="select-box" v-if="movies.length > 0">
                 <select name="movie-genres" id="movie-genres"
                         v-model="movieFilter"
                         @change="getMovieGenreId(movieFilter)">
@@ -15,7 +21,9 @@
                     </option>
                 </select>                
             </div>
-            <h3 v-if="filteredMovies.length == 0">No results for current filter</h3>
+            <h3 v-if="filteredMovies.length == 0 && movieFilter != ''">
+                No results for current filter
+            </h3>
             <ul>
                 <Card   
                     v-for="item in filteredMovies" 
@@ -24,23 +32,28 @@
                     :media="'movie'"
                     :api-key="myApiKey"/>
             </ul>
-        </div>
-        <div v-if="series.length > 0">
+        </section>
+        <!-- /Movies section -->
+
+        <!-- TV section -->
+        <section v-if="currentSearch != ''">
             <h2>TV</h2>
-            <!-- <h4>Results for "{{ tvFilter }}"</h4>              -->
-            <div class="select-box">
-                <select name="movie-genres" id="movie-genres"
+            <h4>Results for "{{ currentSearch }}"</h4> 
+            <div class="select-box" v-if="series.length > 0">
+                <select name="tv-genres" id="tv-genres"
                         v-model="tvFilter"
                         @change="getTvGenreId(tvFilter)">
                     <option value=""
-                            @click="tvGenreId  = ''">All series</option>
+                            @click="tvGenreId = ''">All series</option>
                     <option v-for="genre in tvGenres" 
                             :key="genre.id"
                             :value="genre.name">{{ genre.name }}
                     </option>
                 </select>                
             </div>
-            <h3 v-if="filteredSeries.length == 0">No results for current filter</h3>
+            <h3 v-if="filteredSeries.length == 0 && tvFilter != ''">
+                No results for current filter
+            </h3>
             <ul>
                 <Card   
                     v-for="item in filteredSeries" 
@@ -49,7 +62,9 @@
                     :media="'tv'"
                     :api-key="myApiKey"/>
             </ul>
-        </div>
+        </section>
+        <!-- /TV section -->
+
     </main>
 </template>
 
@@ -75,7 +90,8 @@ export default {
         series: Array,
         movieGenres: Array,
         tvGenres: Array,
-        myApiKey: String
+        myApiKey: String,
+        currentSearch: String
     },
     methods: {        
         getMovieGenreId(filter) {
@@ -113,7 +129,16 @@ export default {
                 filtered = this.series.filter(serie => serie.genre_ids.includes(this.tvGenreId));
             }
             return filtered;
-        },
+        }     
+    },
+    updated() {
+
+        if (this.currentSearch == '') {
+            this.movieFilter = '';
+            this.tvFilter = '';
+            this.movieGenreId = '';
+            this.tvGenreId = '';
+        }                 
     }
 }
 </script>
@@ -134,6 +159,25 @@ export default {
             // background-color: rgba($bg-color, 0.7);
         }
 
+        .welcome {
+            @include absolute-center;  
+            text-align: center;
+            filter: drop-shadow(0 0 100px rgba($brand-color, 0.7));
+
+            h1 {
+                font-size: 100px;
+            }
+
+            img {
+                width: 515px;
+            }
+
+            h1, img {
+                filter: drop-shadow(0 0 10px rgba($bg-color, 1));
+            }
+        }
+
+
         h2 {
             width: 342px;
             margin: 0 auto;
@@ -146,6 +190,13 @@ export default {
             text-align: center;
             font-size: 32px;
         }
+
+        h4 {
+            text-align: center;
+            font-size: 24px;
+            padding-top: 20px;
+        }
+
 
         .select-box {
             display: flex;
