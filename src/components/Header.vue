@@ -25,7 +25,7 @@ export default {
     methods: {
         sendSearch() {
             this.$emit('search', this.searchInput);
-            this.searchInput = '';
+            // this.searchInput = '';
         }
     }
 }

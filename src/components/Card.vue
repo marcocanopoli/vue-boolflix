@@ -16,7 +16,7 @@
             <div class="stars">
                 <i  v-for="i in 5" 
                     :key="i" 
-                    :class="i <= getStars(item.vote_average) ? 'fas' : 'far'"
+                    :class="i <= getStars() ? 'fas' : 'far'"
                     class="fa-star"></i>
             </div>
             <div class="genres" v-if="genresStrings.length > 0">
@@ -86,7 +86,6 @@ export default {
                 .then(res => {
                     this.genres = (res.data.genres);
                     this.getGenresStrings();
-                    console.log(this.genresStrings);
                 })
                 .catch(error => {
                     console.log(error);
@@ -107,7 +106,7 @@ export default {
 
         //get current item's poster
         getPoster(obj) {
-            if (obj.poster_path != null) {
+            if (obj.poster_path) {
                 return 'https://image.tmdb.org/t/p/w342' + obj.poster_path;
             }
         },
@@ -148,8 +147,8 @@ export default {
         },
 
         //get current item's 1-to-5 stars rating
-        getStars(rating) {
-            return Math.ceil(parseInt(rating) / 2);
+        getStars() {
+            return Math.ceil(parseInt(this.item.vote_average) / 2);
         },
     },
     created() {
@@ -255,7 +254,7 @@ export default {
                     overflow-x: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
-                }                
+                }        
             } 
 
             .genres,

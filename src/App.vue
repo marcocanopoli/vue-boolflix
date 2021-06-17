@@ -4,6 +4,8 @@
     <Main :movie-series="movieSeries"
           :movies="movies"
           :series="series"
+          :movie-genres="movieGenres"
+          :tv-genres="tvGenres"
           :my-api-key="myApiKey"/>
   </div>
 </template>
@@ -22,8 +24,6 @@ export default {
     return {
       myApiKey: 'cac0ead6a46196b7a9b38d946de02afc',
       apiUrl: 'https://api.themoviedb.org/3/search/',
-      movieGenresUrl: `https://api.themoviedb.org/3/genre/movie/list`,
-      tvGenresUrl: `https://api.themoviedb.org/3/genre/tv/list`,
       movies: [],
       series: [],
       movieSeries: [],
@@ -70,11 +70,11 @@ export default {
         }));
       }
     },
-    getMovieGenres(movieGenresUrl) {           
+    getMovieGenres() {           
       axios
-        .get(movieGenresUrl, {
+        .get('https://api.themoviedb.org/3/genre/movie/list', {
             params: {
-                api_key: this.apiKey                        
+                api_key: this.myApiKey                        
             }
         })
         .then(res => {
@@ -84,11 +84,11 @@ export default {
             console.log(error);
         });
     }, 
-    getTvGenres(tvGenresUrl) {           
+    getTvGenres() {           
       axios
-        .get(tvGenresUrl, {
+        .get('https://api.themoviedb.org/3/genre/tv/list', {
             params: {
-                api_key: this.apiKey                        
+                api_key: this.myApiKey                        
             }
         })
         .then(res => {
@@ -98,6 +98,10 @@ export default {
             console.log(error);
         });
     } 
+  },
+  created() {
+    this.getMovieGenres();
+    this.getTvGenres();
   }
 }
 </script>
