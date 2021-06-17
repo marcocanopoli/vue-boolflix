@@ -149,7 +149,7 @@ export default {
     
     main {
         min-height: calc(100vh - #{$header-height});                        
-        background-image: linear-gradient((rgba($bg-color, 0.7)), (rgba($bg-color, 0.4)));        
+        background-image: linear-gradient((rgba($bg-color, 0.7)), (rgba($bg-color, 0.4)));              
 
         ul {                       
             display: flex;
@@ -163,7 +163,8 @@ export default {
             @include absolute-center;  
             text-align: center;
             filter: drop-shadow(0 0 100px rgba($brand-color, 0.7));
-
+            animation: pulse 5s alternate infinite;
+            
             h1 {
                 font-size: 100px;
             }
@@ -177,42 +178,55 @@ export default {
             }
         }
 
-        h2, h3, h4 {
-            text-align: center;
-            text-shadow: (0 0 10px $bg-color);
-        }
+        section { 
+            animation: pulse 1s;       
 
-        h2 {
-            width: 342px;
-            margin: 0 auto;
-            font-size: 48px;
-            background: linear-gradient(90deg, transparent 0%, $brand-color 50%, transparent 100%);
-        }
-
-        h3 {
-            font-size: 32px;
-        }
-
-        h4 {
-            font-size: 24px;
-            padding-top: 20px;
-        }
-
-
-        .select-box {
-            display: flex;
-            justify-content: flex-end;
-            padding: 0 50px;
-
-            select {
-                padding: 10px 5px;
-                border-radius: 10px;
-                font-size: 20px;
-                color: $text-color;
-                background-color: $bg-color;
-                outline: none;
-                border: 2px solid $brand-color;
+            h2, h3, h4 {
+                text-align: center;
+                text-shadow: (0 0 10px $bg-color);
             }
+
+            h2 {
+                width: 342px;
+                margin: 0 auto;
+                font-size: 48px;
+                background: linear-gradient(90deg, transparent 0%, $brand-color 50%, transparent 100%);
+            }
+
+            h3 {
+                font-size: 32px;
+            }
+
+            h4 {
+                font-size: 24px;
+                padding-top: 20px;
+            }
+
+
+            .select-box {
+                display: flex;
+                justify-content: flex-end;
+                padding: 0 50px;
+
+                select {
+                    padding: 10px 5px;
+                    border-radius: 10px;
+                    font-size: 20px;
+                    color: $text-color;
+                    background-color: $bg-color;
+                    outline: none;
+                    border: 2px solid $brand-color;
+                }
+            }            
         }
     }
+
+    @keyframes pulse {
+                0% {
+                    opacity: 0;
+                }                
+                100% {
+                    opacity: 1;
+                }
+            }
 </style>
