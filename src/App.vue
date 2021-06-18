@@ -3,7 +3,7 @@
     <Header @search="performSearch"/>
     <Loader v-if="loading"/>
     <Main  v-else
-          :movie-series="movieSeries"
+          :all-results="allResults"
           :movies="movies"
           :series="series"
           :movie-genres="movieGenres"
@@ -30,7 +30,7 @@ export default {
       apiUrl: 'https://api.themoviedb.org/3/search/',
       movies: [],
       series: [],
-      movieSeries: [],
+      allResults: [],
       movieGenres: [],
       tvGenres: [],
       currentSearch: '',
@@ -46,6 +46,7 @@ export default {
     performSearch(text) {
       this.loading = true;
       this.currentSearch = text;
+      
       if (text.trim() == '') {
         this.movieSeries = [];        
         this.movies = [];        

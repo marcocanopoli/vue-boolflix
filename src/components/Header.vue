@@ -6,10 +6,10 @@
                 type="text" 
                 placeholder="Movies, series, titles..."
                 v-model="searchInput"
-                @keydown.enter="sendSearch()">
+                @keydown.enter="$emit('search', searchInput)">
                 <!-- real-time search -->
                 <!-- @keyup="sendSearch()" -->
-            <button @click="sendSearch()">Search</button>
+            <button @click="$emit('search', searchInput)">Search</button>
       </nav>
   </header>
 </template>
@@ -20,12 +20,6 @@ export default {
     data() {
         return {
             searchInput: ''
-        }
-    },
-    methods: {
-        sendSearch() {
-            this.$emit('search', this.searchInput);
-            // this.searchInput = '';
         }
     }
 }

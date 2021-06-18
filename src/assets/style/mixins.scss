@@ -18,8 +18,18 @@
     transform: translate(-50%, -50%);
 }
 
-@mixin clearfix {
-    display: table;
-    content: '';
-    clear: both;
+// @mixin clearfix {
+//     display: table;
+//     content: '';
+//     clear: both;
+// }
+@mixin pulse-animation {
+    @keyframes pulse {
+        0% {
+            opacity: 0;
+        }                
+        100% {
+            opacity: 1;
+        }
+    }
 }
